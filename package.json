@@ -26,6 +26,6 @@
         "url": "https://github.com/codeimpossible/backbone.promiseq.git"
     },
     "scripts": {
-        "test": "grunt test"
+        "test": "grunt"
     }
 }
