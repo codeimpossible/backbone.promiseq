@@ -1,0 +1,41 @@
+{
+  "quotmark": "single",
+  "maxlen": 120,
+  "plusplus": true,
+  "curly": true,
+  "eqnull": true,
+  "eqeqeq": true,
+  "undef": true,
+  "camelcase": true,
+  "forin": true,
+  "immed": true,
+  "indent": 4,
+  "newcap": true,
+  "nonew": true,
+  "unused": true,
+  "trailing": true,
+  "globals": {
+    "jQuery": true,
+    "_": true,
+    "JST": true,
+    "Henson": true,
+    "Backbone": true,
+    "Marionette": true,
+    "Backbone.Marionette": true,
+    "$": true,
+    "window": true,
+    "setTimeout": true,
+
+    "module": true,
+
+    "expect": true,
+    "describe": true,
+    "it": true,
+    "xit": true,
+    "spyOn": true,
+    "beforeEach": true,
+    "afterEach": true,
+    "jasmine": true,
+    "loadFixtures": true
+  }
+}
