@@ -1,6 +1,9 @@
 backbone.promiseq
 =================
 
+[![Build Status](https://travis-ci.org/codeimpossible/backbone.promiseq.png)](https://travis-ci.org/codeimpossible/backbone.promiseq)
+
+
 Backbone.PromiseQ is a light-weight promise queue (get it?)
 
 
