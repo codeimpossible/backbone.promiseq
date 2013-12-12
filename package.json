@@ -4,7 +4,7 @@
     "description": "A lightweight promise queue for Backbone",
     "keywords": ["promises", "queue", "backbone"],
     "author": "Jared Barboza <codeimpossible@gmail.com>",
-    "license": "MIT",
+    "license": "Apache 2.0",
 
     "devDependencies": {
         "jasmine-node": "1.4.0",
