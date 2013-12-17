@@ -1,3 +1,10 @@
+// Backbone.PromiseQ
+// =================
+//
+// v0.1.0
+// (c) 2010-2013 Jared Barboza
+// Backbone.PromiseQ is freely distributable under the Apache license v2.0
+
 (function (root, factory) {
   if (typeof exports === 'object') {
 
