@@ -14,18 +14,18 @@ describe "TaskQueue", ->
     expect(queue).toBeDefined()
 
   it "should allow a function to be added to the queue", ->
-    queue.enqueue simpleTask
+    queue.then simpleTask
     expect(queue.length).toBe 1
     expect(queue.at(0)).toBe simpleTask
 
-  describe "enqueue", ->
+  describe "then", ->
     it "should return the queue instance for chaining", ->
-      result = queue.enqueue(simpleTask)
+      result = queue.then(simpleTask)
       expect(result).toBe queue
 
     it "should allow a pipe task to be added to the queue", ->
       project = new Backbone.Model()
-      queue.enqueue project, (project) ->
+      queue.then project, (project) ->
         project.set "something", "test"
 
       expect(queue.length).toBe 1
@@ -36,20 +36,20 @@ describe "TaskQueue", ->
   describe "next", ->
     describe "with no previous task", ->
       it "should return the next item in the queue", ->
-        queue.enqueue(simpleTask).enqueue nextTask
+        queue.then(simpleTask).then nextTask
         expect(queue.next()).toBe simpleTask
 
 
     describe "previous task", ->
       it "should return the next item in the queue", ->
-        queue.enqueue(simpleTask).enqueue nextTask
+        queue.then(simpleTask).then nextTask
         queue.next()
         expect(queue.next()).toBe nextTask
 
 
     describe "with no more tasks", ->
       it "should return undefined", ->
-        queue.enqueue(simpleTask).enqueue nextTask
+        queue.then(simpleTask).then nextTask
         queue.next()
         queue.next()
         expect(queue.next()).toBeUndefined()
@@ -60,7 +60,7 @@ describe "TaskQueue", ->
     describe "when an error ocurrs", ->
       it "should reject the promise", ->
         result = true
-        queue.enqueue ->
+        queue.then ->
           throw "error!"
 
         runs ->
@@ -92,13 +92,13 @@ describe "TaskQueue", ->
       it "should run them in order", ->
         ref = num: 0
         runs ->
-          queue.enqueue(ref, (r) ->
+          queue.then(ref, (r) ->
             r.num = 1
-          ).enqueue(->
+          ).then(->
             expect(ref.num).toBe 1
-          ).enqueue(ref, (r) ->
+          ).then(ref, (r) ->
             r.num = 3
-          ).enqueue ->
+          ).then ->
             expect(ref.num).toBe 3
 
 
@@ -113,11 +113,11 @@ describe "TaskQueue", ->
     num = 0
     beforeEach ->
       num = 0
-      queue.enqueue(->
+      queue.then(->
         num += 1
-      ).enqueue(->
+      ).then(->
         @exit()  if num is 1
-      ).enqueue ->
+      ).then ->
         num += 1
 
 
@@ -146,13 +146,13 @@ describe "TaskQueue", ->
     num = 0
     beforeEach ->
       num = 0
-      queue.enqueue(->
+      queue.then(->
         num += 1
-      ).enqueue((previous, next) ->
+      ).then((previous, next) ->
         @skip next
-      ).enqueue(->
+      ).then(->
         num += 1
-      ).enqueue ->
+      ).then ->
         num += 1
 
 

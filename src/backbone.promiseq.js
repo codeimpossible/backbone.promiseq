@@ -29,11 +29,11 @@
       shouldExitQueue = false,
       currentTask = -1;
 
-    // #### Enqueue method
+    // #### then method
     // adds a task to the current queue. A task is a function that may or may not return a jQuery promise.
-    // if two arguments are passed to `enqueue` then it assumes that the first is a context and the second is the
+    // if two arguments are passed to `then` then it assumes that the first is a context and the second is the
     // task. In this case, the task will be called with the context as the first argument.
-    this.enqueue = function( /* args */ ) {
+    this.then = function( /* args */ ) {
       var args = Array.prototype.slice.call(arguments),
           task;
 
