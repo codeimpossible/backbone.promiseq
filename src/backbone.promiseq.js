@@ -1,7 +1,7 @@
 // Backbone.PromiseQ
 // =================
 //
-// v0.1.0
+// v0.2.0
 // (c) 2010-2013 Jared Barboza
 // Backbone.PromiseQ is freely distributable under the Apache license v2.0
 
@@ -22,7 +22,7 @@
     root.PromiseQ = factory(root._, root.jQuery, root.Backbone );
   }
 })(this, function (_, $, Backbone) {
-  var PromiseQ = function() {
+  var PromiseQ = function( /* args */ ) {
     var tasks = [],
       // stores the jQuery Deferred object for use in other methods
       deferred,
@@ -147,6 +147,7 @@
               try {
                 result = task.call(queue, queue.peek(-1), queue.peek(1) );
               } catch ( error ) {
+                queue.trigger('run:fail');
                 // if the task throws an exception then reject the current
                 // deferred and exit the queue
                 return deferred.reject( error, task );
@@ -164,6 +165,8 @@
           // that work is complete
           deferred.resolve();
 
+          queue.trigger('run:success');
+
           // increment our run count
           queue.runCount += 1;
         }
@@ -177,10 +180,21 @@
     if( this.initialize ) {
       this.initialize.apply(this, arguments);
     }
+
+    // load any functions passed in the constructor into the queue
+    if( arguments.length > 0 ) {
+      var coll = arguments;
+      if( coll.length === 1 && coll[0].constructor === Array ) {
+        coll = coll[0];
+      }
+      _.each(coll, _.bind(function(a) {
+        this.then(a);
+      }, this));
+    }
   };
 
   // #### TaskQueue Instance Methods
-  _.extend( PromiseQ.prototype, {
+  _.extend( PromiseQ.prototype, Backbone.Events, {
     // holds the promise for the current queue, assigned by `run()`
     promise: null,
 
