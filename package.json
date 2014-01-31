@@ -1,6 +1,6 @@
 {
     "name": "bakbone.promiseq",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "description": "A lightweight promise queue for Backbone",
     "keywords": ["promises", "queue", "backbone"],
     "author": "Jared Barboza <codeimpossible@gmail.com>",
