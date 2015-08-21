@@ -30,7 +30,7 @@ describe "TaskQueue", ->
 
       expect(queue.length).toBe 1
       expect(queue.at(0).target).toBe project
-      expect(queue.at(0).fn).toBeInstanceOf Function
+      expect(queue.at(0).fn instanceof Function).toBe true
 
 
   describe "next", ->
@@ -58,55 +58,40 @@ describe "TaskQueue", ->
 
   describe "run", ->
     describe "when an error ocurrs", ->
-      it "should reject the promise", ->
+      it "should reject the promise", (done) ->
         result = true
         queue.then ->
           throw "error!"
 
-        runs ->
-          queue.run().fail ->
-            result = false
-
-
-        waits 100
-        runs ->
+        queue.run().fail ->
+          result = false
           expect(result).toBe false
-
-
+          done()
 
     describe "when complete", ->
-      it "should resolve the promise", ->
+      it "should resolve the promise", (done) ->
         result = false
-        runs ->
-          queue.run().then ->
-            result = true
 
-
-        waits 500
-        runs ->
+        queue.run().then ->
+          result = true
           expect(result).toBe true
-
+          done()
 
 
     describe "when running tasks", ->
-      it "should run them in order", ->
+      it "should run them in order", (done) ->
         ref = num: 0
-        runs ->
-          queue.then(ref, (r) ->
-            r.num = 1
-          ).then(->
-            expect(ref.num).toBe 1
-          ).then(ref, (r) ->
-            r.num = 3
-          ).then ->
-            expect(ref.num).toBe 3
+        queue.then(ref, (r) ->
+          r.num = 1
+        ).then(->
+          expect(ref.num).toBe 1
+        ).then(ref, (r) ->
+          r.num = 3
+        ).then ->
+          expect(ref.num).toBe 3
+          done();
 
-
-        runs ->
-          queue.run()
-
-        waits 500
-
+        queue.run()
 
 
   describe "exit", ->
@@ -121,26 +106,20 @@ describe "TaskQueue", ->
         num += 1
 
 
-    it "should short-circuit a task queue run immediately", ->
-      runs ->
-        queue.run()
-
-      waits 300
-      runs ->
+    it "should short-circuit a task queue run immediately", (done) ->
+      queue.on 'run:success', ->
         expect(num).toBe 1
+        done()
 
+      queue.run()
 
     describe "when called before the queue is run", ->
-      it "should have no effect on the queue", ->
-        runs ->
-          queue.exit()
-          queue.run()
-
-          # should be a no-op
+      it "should have no effect on the queue", (done) ->
+        queue.exit()
+        queue.on 'run:success', ->
           expect(num).toBe 1
-
-
-
+          done()
+        queue.run()
 
   describe "skip", ->
     num = 0
@@ -156,23 +135,15 @@ describe "TaskQueue", ->
         num += 1
 
 
-    it "can be called before the queue is run", ->
-      runs ->
-        queue.skip queue.at(3)
-        queue.run()
-
-      waits 300
-      runs ->
+    it "can be called before the queue is run", (done) ->
+      queue.skip queue.at(3)
+      queue.then ->
         expect(num).toBe 1
+        done()
+      queue.run()
 
-
-    it "should skip the task passed", ->
-      runs ->
-        queue.run()
-
-      waits 300
-      runs ->
+    it "should skip the task passed", (done) ->
+      queue.then ->
         expect(num).toBe 2
-
-
-
+        done()
+      queue.run()

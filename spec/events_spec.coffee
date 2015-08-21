@@ -15,27 +15,23 @@ describe "Events", ->
     expect(queue.trigger).toBeDefined()
     expect(queue.off).toBeDefined()
 
-  it "should trigger run:success when the queue completes", ->
+  it "should trigger run:success when the queue completes", (done) ->
     result = false
 
-    queue.on 'run:success', -> result = true
-    runs ->
-      queue.run()
-
-    waits 500
-
-    runs ->
+    queue.on 'run:success', ->
+      result = true
       expect(result).toBe true
+      done()
 
-  it "should trigger run:fail when the queue errors out", ->
+    queue.run()
+
+  it "should trigger run:fail when the queue errors out", (done) ->
     result = true
     queue.then ->
       throw "error!"
 
-    queue.on 'run:fail', -> result = false
-    runs ->
-      queue.run()
-
-    waits 100
-    runs ->
+    queue.on 'run:fail', ->
+      result = false
       expect(result).toBe false
+      done()
+    queue.run()
