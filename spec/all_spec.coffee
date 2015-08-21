@@ -32,6 +32,26 @@ describe "TaskQueue", ->
       expect(queue.at(0).target).toBe project
       expect(queue.at(0).fn instanceof Function).toBe true
 
+  describe "flush", ->
+    it "should empty the queue", ->
+      queue.then ->
+        console.log("testing")
+
+      expect(queue.length).toBe 1
+
+      queue.flush()
+
+      expect(queue.length).toBe 0
+
+    it "should return the queue before it was flushed", ->
+      queue.then ->
+        console.log("testing")
+
+      first_task = queue.at 0
+
+      tasks = queue.flush()
+
+      expect(tasks[0]).toBe first_task
 
   describe "next", ->
     describe "with no previous task", ->

@@ -29,6 +29,19 @@
       shouldExitQueue = false,
       currentTask = -1;
 
+    // #### flush method
+    // empties the queue, useful if you want to reuse your queues. Be careful! This will completely
+    // remove all the tasks from the current queue. DO NOT CALL WHEN RUNNING A QUEUE.
+    this.flush = function() {
+      var cpy = tasks.slice();
+
+      tasks = [];
+      this.length = 0;
+      currentTask = -1;
+
+      return cpy;
+    };
+
     // #### then method
     // adds a task to the current queue. A task is a function that may or may not return a jQuery promise.
     // if two arguments are passed to `then` then it assumes that the first is a context and the second is the
